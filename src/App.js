@@ -1,10 +1,29 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { AgGridReact } from "ag-grid-react";
+import "ag-grid-community/styles/ag-grid.css";
+import "ag-grid-community/styles/ag-theme-alpine.css";
+
+import { ModuleRegistry } from "ag-grid-community";
+import { ClientSideRowModelModule } from "ag-grid-community";
+ModuleRegistry.registerModules([ClientSideRowModelModule]);
 
 function App() {
   const [showStats, setShowStats] = useState(true);
+
+  const columnDefs = [
+    { headerName: "Estimate Name", field: "name" },
+    { headerName: "Recurring ACR", field: "recurring" },
+    { headerName: "ACR over 3 yrs", field: "total" },
+  ];
+
+  const rowData = [
+    { name: "estimate34", recurring: "$37", total: "$1434" },
+    { name: "est789", recurring: "$17", total: "$6436" },
+  ];
+
   return (
     <div className="flex flex-col h-screen p-4 bg-gray-100">
-
+      
       <div className="w-full flex justify-center mb-4">
         <h1 className="text-2xl font-bold text-gray-800">
           Consumption Estimator
@@ -35,36 +54,26 @@ function App() {
         >
           <div className="bg-white p-4 rounded shadow h-full overflow-auto">
             <h2 className="text-xl font-semibold mb-4">Estimates</h2>
-            <table className="min-w-full border">
-              <thead>
-                <tr className="bg-gray-200">
-                  <th className="border px-4 py-2">Estimate Name</th>
-                  <th className="border px-4 py-2">Recurring ACR</th>
-                  <th className="border px-4 py-2">ACR over 3 yrs</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border px-4 py-2">estimate34</td>
-                  <td className="border px-4 py-2">$37,708</td>
-                  <td className="border px-4 py-2">$1,198,305</td>
-                </tr>
-                <tr>
-                  <td className="border px-4 py-2">est789</td>
-                  <td className="border px-4 py-2">$17,927</td>
-                  <td className="border px-4 py-2">$627,436</td>
-                </tr>
-              </tbody>
-            </table>
+
+            <div className="ag-theme-alpine" style={{ height: "600px", width: "100%" }}>
+              <AgGridReact
+                rowData={rowData}
+                columnDefs={columnDefs}
+                defaultColDef={{
+                  flex: 1,
+                  minWidth: 150,
+                  resizable: true,
+                }}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Stats Panel */}
         {showStats && (
           <div className="w-1/4 transition-all duration-300 ml-4 bg-white p-4 rounded shadow">
 
             <h2 className="text-lg font-bold mb-2">Stats</h2>
-            
+
             <div className="text-sm mb-3">
               <p className="font-semibold text-black">Estimates Created:</p>
               <p className="font-semibold text-black">1</p>
